@@ -18,7 +18,7 @@
         <TextBlock x:Name="EnterValuesBlock" HorizontalAlignment="Left" Margin="10,150,0,0" Text="Enter your values:" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="200" FontSize="24" Visibility="Collapsed"/>
         <Button x:Name="MenuButton" Content="Menu" Margin="10,10,0,0" VerticalAlignment="Top" Height="40" Width="75" FontSize="18" Click="Menu_Click"/>
         <Button x:Name="RestartButton" Content="Restart" Margin="90,10,0,0" VerticalAlignment="Top" Height="40" Width="75" FontSize="18" Click="Restart_Click"/>
-        <TextBox x:Name="maxRowsEntering" HorizontalAlignment="Left" Margin="350,50,0,0" Text="" TextWrapping="NoWrap" VerticalAlignment="Top" Header="Maximal number of rows in coloumn" PlaceholderText="" FontSize="24" Width="250" Height="110" KeyUp="maxRowsEntering_KeyUp"/>
+        <TextBox x:Name="maxRowsEntering" HorizontalAlignment="Left" Margin="350,50,0,0" Text="" TextWrapping="NoWrap" VerticalAlignment="Top" Header="Maximal number of rows in column" PlaceholderText="" FontSize="24" Width="250" Height="110" KeyUp="maxRowsEntering_KeyUp"/>
         <ScrollViewer x:Name="summaryErrorScroll" Background="Black" Visibility="Visible">
             <Grid x:Name="summaryErrorGrid" Height="718" Width="1279">
                 <Button x:Name="MenuButton_SummEr" Content="Menu" Margin="10,5,0,0" VerticalAlignment="Top" Height="40" Width="75" FontSize="18" Click="Menu_Click"/>
@@ -27,7 +27,7 @@
                         <CompositeTransform SkewY="0.232" TranslateY="0.584"/>
                     </TextBlock.RenderTransform></TextBlock>
                 <TextBox x:Name="NumOfValuesEntering_SummEr" HorizontalAlignment="Left" Margin="50,115,0,0" Text="" TextWrapping="NoWrap" VerticalAlignment="Top" Height="50" Width="100" RequestedTheme="Default" FontSize="24" InputScope="Number" KeyUp="NumOfValEntSummEr_KeyUp" KeyDown="NumOfValEntSummEr_KeyDown" TextAlignment="Center"/>
-                <TextBox x:Name="maxRowsEntering_SummEr" HorizontalAlignment="Right" Margin="0,45,91,0" Text="" TextWrapping="NoWrap" VerticalAlignment="Top" Header="Maximal number of rows in coloumn" PlaceholderText="" FontSize="24" Width="250" Height="120" KeyUp="maxRowsEntering_KeyUp" TextAlignment="Center"/>
+                <TextBox x:Name="maxRowsEntering_SummEr" HorizontalAlignment="Right" Margin="0,45,91,0" Text="" TextWrapping="NoWrap" VerticalAlignment="Top" Header="Maximal number of rows in column" PlaceholderText="" FontSize="24" Width="250" Height="120" KeyUp="maxRowsEntering_KeyUp" TextAlignment="Center"/>
                 <TextBlock x:Name="EnterValuesBlock_SummEr" HorizontalAlignment="Left" Margin="10,165,0,0" Text="Enter your values:" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="200" FontSize="24" Visibility="Collapsed"/>
                 <TextBox x:Name="confProbEntering" HorizontalAlignment="Left" Margin="250,115,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" Height="50" Header="" FontSize="24" TextAlignment="Center" KeyUp="confProb_KeyUp"/>
                 <TextBox x:Name="marginErrorEntering" HorizontalAlignment="Left" Margin="450,115,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" TextAlignment="Center" Header="" Height="50" Width="100" KeyUp="marginError_KeyUp"/>
@@ -38,6 +38,7 @@
                 <TextBlock x:Name="summaryErrorOutput" HorizontalAlignment="Right" Margin="0,0,20,0" Text="" TextWrapping="Wrap" VerticalAlignment="Center" Width="250" Height="200" IsTextSelectionEnabled="True" FontSize="24"/>
                 <TextBlock x:Name="errOfInstOutput" HorizontalAlignment="Left" Margin="700,200,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" Height="100"/>
                 <TextBlock x:Name="errOfRoundingOutput" HorizontalAlignment="Left" Margin="700,300,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" Height="100"/>
+                <Button x:Name="RestartButton_SummEr" Content="Restart" Margin="90,5,0,0" VerticalAlignment="Top" Height="40" Width="75" FontSize="18" Click="RestartSummEr_Click"/>
             </Grid>
         </ScrollViewer>
     </Grid>
