@@ -54,8 +54,8 @@ namespace ErrorsApp
 
             menu = new ListView
             {
-                Width = 300,
-                Height = 250,
+                Width = 350,
+                Height = 200,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness
@@ -161,12 +161,14 @@ namespace ErrorsApp
 
         private void ErrorOfMeasureOpener_Click(object sender, RoutedEventArgs e)
         {
+            Restart();
             summaryErrorGrid.Visibility = Visibility.Collapsed;
             summaryErrorScroll.Visibility = Visibility.Collapsed;
         }
 
         private void SummaryErrorOpener_Click(object sender, RoutedEventArgs e)
         {
+            Restart_SummEr();
             summaryErrorScroll.Visibility = Visibility.Visible;
             summaryErrorGrid.Visibility = Visibility.Visible;
         }
@@ -214,6 +216,7 @@ namespace ErrorsApp
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
+                formatOfValIsCorrect[currentValueNumber] = double.TryParse(textBoxesList[currentValueNumber].Text, out values[currentValueNumber]);
                 if (currentValueNumber < NumOfVal - 1 && formatOfValIsCorrect[currentValueNumber])
                 {
                     textBoxesList[currentValueNumber + 1].AllowFocusOnInteraction = true;
@@ -270,26 +273,35 @@ namespace ErrorsApp
                     previousValueNumber = i;
                 }
             }
-            formatOfValIsCorrect[previousValueNumber] = double.TryParse(textBoxesList[previousValueNumber].Text, out values[previousValueNumber]);
+            
             if (!formatOfValIsCorrect[previousValueNumber])
             {
                 textBoxesList[previousValueNumber].Width = 192;
                 textBoxesList[previousValueNumber].Text = "";
                 textBoxesList[previousValueNumber].PlaceholderText = "Incorrect format";
             }
+            else
+            {
+                textBoxesList[previousValueNumber].Width = 100;
+            }
             if (AllNumsEnteredCheck())
             {
-                if (summaryErrorGrid.Visibility == Visibility.Collapsed)
-                {
-                    absoluteError = ErrorOfMeasure(values);
-                    relativeError = absoluteError / medium * 100;
-                    ResultsOutput.Text = $"Medium value: {medium}\nAbsolute error: {absoluteError}\nRelative error: {Round(relativeError, 2)}%";
-                }
-                else
-                {
-                    SummaryErrorCalculating(values);
-                    summaryErrorOutput.Text = $"Medium value: {sumMedium}\nAbsolute error: {sumAbsError}\nRelative error: {Round(sumRelativeError, 2)}% ";
-                }
+                Output();
+            }
+        }
+
+        private void Output()
+        {
+            if (summaryErrorGrid.Visibility == Visibility.Collapsed)
+            {
+                absoluteError = ErrorOfMeasure(values);
+                relativeError = absoluteError / medium * 100;
+                ResultsOutput.Text = $"Medium value: {medium}\nAbsolute error: {Round(absoluteError, 4)}\nRelative error: {Round(relativeError, 2)}%";
+            }
+            else
+            {
+                SummaryErrorCalculating(values);
+                summaryErrorOutput.Text = $"Medium value: {sumMedium}\nAbsolute error: {Round(sumAbsError, 4)}\nRelative error: {Round(sumRelativeError, 2)}% ";
             }
         }
 
@@ -336,8 +348,8 @@ namespace ErrorsApp
             {
                 textBoxesList.Add(new TextBox
                 {
-                    Height = NumOfValuesEntering.Height,
-                    Width = NumOfValuesEntering.Width,
+                    Height = 50,
+                    Width = 100,
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top,
                     Visibility = Visibility.Visible,
@@ -486,8 +498,8 @@ namespace ErrorsApp
             {
                 textBoxesList.Add(new TextBox
                 {
-                    Height = NumOfValuesEntering_SummEr.Height,
-                    Width = NumOfValuesEntering_SummEr.Width,
+                    Height = 50,
+                    Width = 100,
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top,
                     Visibility = Visibility.Visible,
@@ -496,8 +508,8 @@ namespace ErrorsApp
                         Left = NumOfValuesEntering_SummEr.Margin.Left + i / maxRows * (10 + NumOfValuesEntering_SummEr.Width),
                         Top = EnterValuesBlock_SummEr.Margin.Top + EnterValuesBlock_SummEr.Height + i % maxRows * NumOfValuesEntering_SummEr.Height,
                     },
-                    FontSize = NumOfValuesEntering.FontSize,
-                    TextAlignment = NumOfValuesEntering.TextAlignment,
+                    FontSize = NumOfValuesEntering_SummEr.FontSize,
+                    TextAlignment = NumOfValuesEntering_SummEr.TextAlignment,
 
                 });
 
@@ -508,34 +520,13 @@ namespace ErrorsApp
 
                 summaryErrorGrid.Children.Add(textBoxesList[i]);
             }
-            textBoxesList[0].AllowFocusOnInteraction = true;
+            //textBoxesList[0].AllowFocusOnInteraction = true;
             textBoxesList[0].Focus(FocusState.Keyboard);
         }
 
         private void NumOfValEntSummEr_KeyUp(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Enter)
-            {
-                bool formatIsCorrect = int.TryParse(NumOfValuesEntering_SummEr.Text, out NumOfVal);
-                if (!formatIsCorrect)
-                {
-                    NumOfValuesEntering_SummEr.Width = 192;
-                    NumOfValuesEntering_SummEr.Text = "";
-                    NumOfValuesEntering_SummEr.PlaceholderText = "Incorrect format";
-                }
-                else
-                {
-                    Array.Resize(ref values, NumOfVal);
-                    Array.Resize(ref formatOfValIsCorrect, NumOfVal);
-                    confProbEntering.AllowFocusOnInteraction = true;
-                    confProbEntering.Focus(FocusState.Keyboard);
-                }
-                if (AllParamsEntered())
-                {
-                    TableCreating_SummEr();
-                }
-            }
-            if (e.Key == Windows.System.VirtualKey.Right)
+            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Right)
             {
                 confProbEntering.AllowFocusOnInteraction = true;
                 confProbEntering.Focus(FocusState.Keyboard);
@@ -547,71 +538,85 @@ namespace ErrorsApp
 
         }
 
+        private void NumOfValEntSummEr_LostFocus(object sender, RoutedEventArgs e)
+        {
+            bool formatIsCorrect = int.TryParse(NumOfValuesEntering_SummEr.Text, out NumOfVal);
+            NumOfValuesEntering_SummEr.Width = 100;
+            if (!formatIsCorrect)
+            {
+                NumOfValuesEntering_SummEr.Width = 192;
+                NumOfValuesEntering_SummEr.Text = "";
+                NumOfValuesEntering_SummEr.PlaceholderText = "Incorrect format";
+            }
+            else
+            {
+                Array.Resize(ref values, NumOfVal);
+                Array.Resize(ref formatOfValIsCorrect, NumOfVal);
+            }
+            if (AllParamsEntered())
+            {
+                TableCreating_SummEr();
+            }
+        }
+
         private void confProb_KeyUp(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Enter)
+            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Right)
             {
-                bool formatIsCorrect = double.TryParse(confProbEntering.Text, out p);
-                if (!formatIsCorrect)
-                {
-                    NumOfValuesEntering_SummEr.Width = 192;
-                    NumOfValuesEntering_SummEr.Text = "";
-                    NumOfValuesEntering_SummEr.PlaceholderText = "Incorrect format";
-                }
-                else
-                {                    
-                    marginErrorEntering.AllowFocusOnInteraction = true;
-                    marginErrorEntering.Focus(FocusState.Keyboard);
-                }
-
-                if (AllParamsEntered())
-                {
-                    TableCreating_SummEr();
-                }
+                marginErrorEntering.AllowFocusOnInteraction = true;
+                marginErrorEntering.Focus(FocusState.Keyboard);
             }
             if (e.Key == Windows.System.VirtualKey.Left)
             {
                 NumOfValuesEntering_SummEr.AllowFocusOnInteraction = true;
                 NumOfValuesEntering_SummEr.Focus(FocusState.Keyboard);
             }
-            if (e.Key == Windows.System.VirtualKey.Right)
+        }
+
+        private void ConfProb_LostFocus(object sender, RoutedEventArgs e)
+        {
+            bool formatIsCorrect = double.TryParse(confProbEntering.Text, out p);
+            confProbEntering.Width = 100;
+            if (!formatIsCorrect)
             {
-                marginErrorEntering.AllowFocusOnInteraction = true;
-                marginErrorEntering.Focus(FocusState.Keyboard);
+                confProbEntering.Width = 192;
+                confProbEntering.Text = "";
+                confProbEntering.PlaceholderText = "Incorrect format";
+            }
+
+            if (AllParamsEntered())
+            {
+                TableCreating_SummEr();
             }
         }
 
         private void marginError_KeyUp(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Enter)
+            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Right)
             {
-                bool formatIsCorrect = double.TryParse(marginErrorEntering.Text, out marginOfError);
-                if (!formatIsCorrect)
-                {
-                    marginErrorEntering.Width = 192;
-                    marginErrorEntering.Text = "";
-                    marginErrorEntering.PlaceholderText = "Incorrect format";
-                }
-                else
-                {
-                    roundingIntEntering.AllowFocusOnInteraction = true;
-                    roundingIntEntering.Focus(FocusState.Keyboard);
-                }
-
-                if (AllParamsEntered())
-                {
-                    TableCreating_SummEr();
-                }
+                roundingIntEntering.AllowFocusOnInteraction = true;
+                roundingIntEntering.Focus(FocusState.Keyboard);
             }
             if (e.Key == Windows.System.VirtualKey.Left)
             {
                 confProbEntering.AllowFocusOnInteraction = true;
                 confProbEntering.Focus(FocusState.Keyboard);
             }
-            if (e.Key == Windows.System.VirtualKey.Right)
+        }
+
+        private void MarginError_LostFocus(object sender, RoutedEventArgs e)
+        {
+            bool formatIsCorrect = double.TryParse(marginErrorEntering.Text, out marginOfError);
+            marginErrorEntering.Width = 100;
+            if (!formatIsCorrect)
             {
-                roundingIntEntering.AllowFocusOnInteraction = true;
-                roundingIntEntering.Focus(FocusState.Keyboard);
+                marginErrorEntering.Width = 192;
+                marginErrorEntering.Text = "";
+                marginErrorEntering.PlaceholderText = "Incorrect format";
+            }
+            if (AllParamsEntered())
+            {
+                TableCreating_SummEr();
             }
         }
 
@@ -619,22 +624,51 @@ namespace ErrorsApp
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
-                bool formatIsCorrect = double.TryParse(roundingIntEntering.Text, out roundingInterval);
-                if (!formatIsCorrect)
+                if (NumOfValuesEntering_SummEr.Text == "")
                 {
-                    roundingIntEntering.Width = 192;
-                    roundingIntEntering.Text = "";
-                    roundingIntEntering.PlaceholderText = "Incorrect format";
+                    NumOfValuesEntering_SummEr.AllowFocusOnInteraction = true;
+                    NumOfValuesEntering_SummEr.Focus(FocusState.Keyboard);
                 }
-                if (AllParamsEntered())
+                else if (confProbEntering.Text == "")
                 {
-                    TableCreating_SummEr();
+                    confProbEntering.AllowFocusOnInteraction = true;
+                    confProbEntering.Focus(FocusState.Keyboard);
+                }
+                else if (marginErrorEntering.Text == "")
+                {
+                    marginErrorEntering.AllowFocusOnInteraction = true;
+                    marginErrorEntering.Focus(FocusState.Keyboard);
+                }
+                else if (roundingIntEntering.Text == "")
+                {
+                    roundingIntEntering.AllowFocusOnInteraction = true;
+                    roundingIntEntering.Focus(FocusState.Keyboard);
+                }
+                else
+                {
+                    roundingIntEntering.Focus(FocusState.Keyboard);
                 }
             }
             if (e.Key == Windows.System.VirtualKey.Left)
             {
                 marginErrorEntering.AllowFocusOnInteraction = true;
                 marginErrorEntering.Focus(FocusState.Keyboard);
+            }
+        }
+
+        private void RoundingIntEnt_LostFocus(object sender, RoutedEventArgs e)
+        {
+            bool formatIsCorrect = double.TryParse(roundingIntEntering.Text, out roundingInterval);
+            roundingIntEntering.Width = 100;
+            if (!formatIsCorrect)
+            {
+                roundingIntEntering.Width = 192;
+                roundingIntEntering.Text = "";
+                roundingIntEntering.PlaceholderText = "Incorrect format";
+            }
+            if (AllParamsEntered())
+            {
+                TableCreating_SummEr();
             }
         }
 
