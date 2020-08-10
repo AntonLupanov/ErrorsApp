@@ -34,14 +34,7 @@ namespace ErrorsApp
         int currentValueNumber, previousValueNumber, NumOfVal, maxRows = 5;
         bool[] formatOfValIsCorrect = new bool[0];
         double medium, absoluteError, relativeError, sumMedium, sumAbsError, sumRelativeError;
-        bool menuOpened = false;
         double p, marginOfError, roundingInterval;
-
-        ListView menu;
-        Button errorOfMeasureOpener;
-        Button summaryErrorOpener;
-        //TextBox maxRowsEntering;
-        Button menuCloser;
 
 
 
@@ -51,118 +44,15 @@ namespace ErrorsApp
 
             maxRowsEntering.PlaceholderText = $"currently it is {maxRows}";
             maxRowsEntering_SummEr.PlaceholderText = $"currently it is {maxRows}";
-
-            menu = new ListView
-            {
-                Width = 350,
-                Height = 200,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness
-                {
-                    Left = 10,
-                    Top = 50
-                },
-                Background = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50)),
-
-            };
-
-            errorOfMeasureOpener = new Button
-            {
-                Width = menu.Width,
-                Height = 50,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness
-                {
-                    Left = 0,
-                    Top = 10
-                },
-                FontSize = 18,
-                Content = "Accidental error of measure",
-                Opacity = 1,
-            };
-            errorOfMeasureOpener.Click += ErrorOfMeasureOpener_Click;
-            menu.Items.Add(errorOfMeasureOpener);
-
-            summaryErrorOpener = new Button
-            {
-                Width = menu.Width,
-                Height = 50,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness
-                {
-                    Left = 0,
-                    Top = 10
-                },
-                FontSize = 18,
-                Content = "Summary Error",
-                Opacity = 1,
-            };
-            summaryErrorOpener.Click += SummaryErrorOpener_Click;
-            menu.Items.Add(summaryErrorOpener);
-
-            //maxRowsEntering = new TextBox
-            //{
-            //    Width = 250,
-            //    Height = 100,
-            //    HorizontalAlignment = HorizontalAlignment.Left,
-            //    VerticalAlignment = VerticalAlignment.Top,
-            //    Margin = new Thickness
-            //    {
-            //        Left = 0,
-            //        Top = 10
-            //    },
-            //    FontSize = 18,
-            //    Header = "Maximal number of rows in coloumn",
-            //    PlaceholderText = $"currently it is {maxRows}"
-            //};
-            //maxRowsEntering.KeyUp += maxRowsEntering_KeyUp;
-            //menu.Items.Add(maxRowsEntering);
-
-            menuCloser = new Button
-            {
-                Width = menu.Width,
-                Height = 50,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness
-                {
-                    Left = 0,
-                    Top = 10
-                },
-                FontSize = 18,
-                Content = "Close Menu",
-                Opacity = 1,
-            };
-            menuCloser.Click += CloseMenu_Click;
-            menu.Items.Add(menuCloser);
         }
 
         //Code for both error of measure and summary error pages
 
-            //Code for menu
-
-        private void Menu_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (menuOpened)
-            {
-                accidErrGrid.Children.Remove(menu);
-                menuOpened = false;
-            }
-            else
-            {
-                accidErrGrid.Children.Add(menu);
-                menuOpened = true;
-            }
-        }
+            //Code for menu except of restart
 
         private void ErrorOfMeasureOpener_Click(object sender, RoutedEventArgs e)
         {
             Restart();
-            summaryErrorGrid.Visibility = Visibility.Collapsed;
             summaryErrorScroll.Visibility = Visibility.Collapsed;
         }
 
@@ -170,16 +60,23 @@ namespace ErrorsApp
         {
             Restart_SummEr();
             summaryErrorScroll.Visibility = Visibility.Visible;
-            summaryErrorGrid.Visibility = Visibility.Visible;
         }
 
-        private void CloseMenu_Click(object sender, RoutedEventArgs e)
+        private void DarkTheme_Click(object sender, RoutedEventArgs e)
         {
-            accidErrGrid.Children.Remove(menu);
-            menuOpened = false;
+            accidErrGrid.RequestedTheme = ElementTheme.Dark;
+            accidErrGrid.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+            summaryErrorGrid.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
         }
 
-            //Code for entering maximal num of rows in column
+        private void LightTheme_Click(object sender, RoutedEventArgs e)
+        {
+            accidErrGrid.RequestedTheme = ElementTheme.Light;
+            accidErrGrid.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+            summaryErrorGrid.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+        }
+
+        //Code for entering maximal num of rows in column
 
         private void maxRowsEntering_KeyUp(object sender, KeyRoutedEventArgs e)
         {
@@ -224,7 +121,7 @@ namespace ErrorsApp
                 }
                 else if (currentValueNumber == NumOfVal - 1 && formatOfValIsCorrect[currentValueNumber])
                 {
-                    TextBox_LostFocus(sender, e);
+                    textBoxesList[currentValueNumber].Focus(FocusState.Keyboard);
                 }
             }
         }
