@@ -52,13 +52,13 @@ namespace ErrorsApp
 
         private void ErrorOfMeasureOpener_Click(object sender, RoutedEventArgs e)
         {
-            Restart();
+            Restart_SummEr();
             summaryErrorScroll.Visibility = Visibility.Collapsed;
         }
 
         private void SummaryErrorOpener_Click(object sender, RoutedEventArgs e)
         {
-            Restart_SummEr();
+            Restart();
             summaryErrorScroll.Visibility = Visibility.Visible;
         }
 
@@ -76,7 +76,7 @@ namespace ErrorsApp
             summaryErrorGrid.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
         }
 
-        //Code for entering maximal num of rows in column
+            //Code for entering maximal num of rows in column
 
         private void maxRowsEntering_KeyUp(object sender, KeyRoutedEventArgs e)
         {
@@ -121,7 +121,14 @@ namespace ErrorsApp
                 }
                 else if (currentValueNumber == NumOfVal - 1 && formatOfValIsCorrect[currentValueNumber])
                 {
-                    textBoxesList[currentValueNumber].Focus(FocusState.Keyboard);
+                    if (summaryErrorScroll.Visibility == Visibility.Collapsed)
+                    {
+                        ResultsOutput.Focus(FocusState.Programmatic);
+                    }
+                    else
+                    {
+                        summaryErrorOutput.Focus(FocusState.Programmatic);
+                    }
                 }
             }
         }
@@ -189,7 +196,7 @@ namespace ErrorsApp
 
         private void Output()
         {
-            if (summaryErrorGrid.Visibility == Visibility.Collapsed)
+            if (summaryErrorScroll.Visibility == Visibility.Collapsed)
             {
                 absoluteError = ErrorOfMeasure(values);
                 relativeError = absoluteError / medium * 100;
@@ -216,7 +223,7 @@ namespace ErrorsApp
         }
 
 
-        //Code for error of measure page
+        //Code for accidental error of measure page
 
         private void Restart_Click(object sender, RoutedEventArgs e)
         {
@@ -230,6 +237,7 @@ namespace ErrorsApp
             for (int i = 0; i < textBoxesList.Count; i++)
             {
                 accidErrGrid.Children.Remove(textBoxesList[i]);
+                formatOfValIsCorrect[i] = false;
             }
             textBoxesList.Clear();
             ResultsOutput.Text = "";
@@ -309,13 +317,18 @@ namespace ErrorsApp
             }
             medium /= NumOfVal;
 
+            if (values.Length == 1)
+            {
+                return 0;
+            }
+
             double ErrorOfMeasure = 0;
             for (int i = 0; i < NumOfVal; i++)
             {
                 ErrorOfMeasure += (values[i] - medium) * (values[i] - medium);
             }
-            ErrorOfMeasure = Tpn(p, NumOfVal) * Math.Sqrt(ErrorOfMeasure / (NumOfVal * NumOfVal - NumOfVal));
-
+            ErrorOfMeasure = Tpn(p, NumOfVal) * Sqrt(ErrorOfMeasure / (NumOfVal * NumOfVal - NumOfVal));
+                        
             return ErrorOfMeasure;
         }
 
@@ -382,6 +395,7 @@ namespace ErrorsApp
             for (int i = 0; i < textBoxesList.Count; i++)
             {
                 summaryErrorGrid.Children.Remove(textBoxesList[i]);
+                formatOfValIsCorrect[i] = false;
             }
             textBoxesList.Clear();
             summaryErrorOutput.Text = "";
@@ -543,7 +557,7 @@ namespace ErrorsApp
                 }
                 else
                 {
-                    roundingIntEntering.Focus(FocusState.Keyboard);
+                    summaryErrorOutput.Focus(FocusState.Programmatic);
                 }
             }
             if (e.Key == Windows.System.VirtualKey.Left)
