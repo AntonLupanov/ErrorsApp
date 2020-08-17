@@ -62,6 +62,16 @@ namespace ErrorsApp
             summaryErrorScroll.Visibility = Visibility.Visible;
         }
 
+        private void LanguageEnglish_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void LanguageUkr_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private void DarkTheme_Click(object sender, RoutedEventArgs e)
         {
             accidErrGrid.RequestedTheme = ElementTheme.Dark;
@@ -237,6 +247,9 @@ namespace ErrorsApp
             for (int i = 0; i < textBoxesList.Count; i++)
             {
                 accidErrGrid.Children.Remove(textBoxesList[i]);
+            }
+            for (int i = 0; i < formatOfValIsCorrect.Length; i++)
+            {
                 formatOfValIsCorrect[i] = false;
             }
             textBoxesList.Clear();
@@ -260,8 +273,8 @@ namespace ErrorsApp
                     Visibility = Visibility.Visible,
                     Margin = new Thickness
                     {
-                        Left = NumOfValuesEntering.Margin.Left + i / maxRows * (10 + NumOfValuesEntering.Width),
-                        Top = EnterValuesBlock.Margin.Top + EnterValuesBlock.Height + i % maxRows * NumOfValuesEntering.Height,
+                        Left = NumOfValuesEntering.Margin.Left + i / maxRows * 192,
+                        Top = EnterValuesBlock.Margin.Top + EnterValuesBlock.Height + i % maxRows * 50,
                     },
                     FontSize = NumOfValuesEntering.FontSize,
                     TextAlignment = NumOfValuesEntering.TextAlignment,
@@ -294,17 +307,49 @@ namespace ErrorsApp
                 {
                     Array.Resize(ref values, NumOfVal);
                     Array.Resize(ref formatOfValIsCorrect, NumOfVal);
-                    TableCreating();
+                    ConfProbEntering.AllowFocusOnInteraction = true;
+                    ConfProbEntering.Focus(FocusState.Keyboard);
                 }
             }
         }
 
         private void NumOfValEnt_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Down)
+            if (e.Key == Windows.System.VirtualKey.Right)
             {
-                textBoxesList[0].AllowFocusOnInteraction = true;
-                textBoxesList[0].Focus(FocusState.Keyboard);
+                ConfProbEntering.AllowFocusOnInteraction = true;
+                ConfProbEntering.Focus(FocusState.Keyboard);
+            }
+        }
+
+        private void ConfProb_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                ResultsOutput.AllowFocusOnInteraction = true;
+                ResultsOutput.Focus(FocusState.Programmatic);
+            }
+            if (e.Key == Windows.System.VirtualKey.Left)
+            {
+                NumOfValuesEntering.AllowFocusOnInteraction = true;
+                NumOfValuesEntering.Focus(FocusState.Keyboard);
+            }
+        }
+
+        private void ConfProb_LostFocus(object sender, RoutedEventArgs e)
+        {
+            bool formatIsCorrect = double.TryParse(ConfProbEntering.Text, out p);
+            ConfProbEntering.Width = 100;
+            if (!formatIsCorrect)
+            {
+                ConfProbEntering.Width = 192;
+                ConfProbEntering.Text = "";
+                ConfProbEntering.PlaceholderText = "Incorrect format";
+            }
+
+            if (NumOfValuesEntering.Text != "" && ConfProbEntering.Text != "")
+            {
+                TableCreating();
             }
         }
 
@@ -384,7 +429,7 @@ namespace ErrorsApp
         {
             Restart_SummEr();
             NumOfValuesEntering_SummEr.Text = "";
-            confProbEntering.Text = "";
+            confProbEnteringSE.Text = "";
             marginErrorEntering.Text = "";
             roundingIntEntering.Text = "";
         }
@@ -416,7 +461,7 @@ namespace ErrorsApp
                     Visibility = Visibility.Visible,
                     Margin = new Thickness
                     {
-                        Left = NumOfValuesEntering_SummEr.Margin.Left + i / maxRows * (10 + NumOfValuesEntering_SummEr.Width),
+                        Left = NumOfValuesEntering_SummEr.Margin.Left + i / maxRows * (50 + NumOfValuesEntering_SummEr.Width),
                         Top = EnterValuesBlock_SummEr.Margin.Top + EnterValuesBlock_SummEr.Height + i % maxRows * NumOfValuesEntering_SummEr.Height,
                     },
                     FontSize = NumOfValuesEntering_SummEr.FontSize,
@@ -439,8 +484,8 @@ namespace ErrorsApp
         {
             if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Right)
             {
-                confProbEntering.AllowFocusOnInteraction = true;
-                confProbEntering.Focus(FocusState.Keyboard);
+                confProbEnteringSE.AllowFocusOnInteraction = true;
+                confProbEnteringSE.Focus(FocusState.Keyboard);
             }
         }
 
@@ -470,7 +515,7 @@ namespace ErrorsApp
             }
         }
 
-        private void confProb_KeyUp(object sender, KeyRoutedEventArgs e)
+        private void ConfProbSE_KeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Right)
             {
@@ -484,15 +529,15 @@ namespace ErrorsApp
             }
         }
 
-        private void ConfProb_LostFocus(object sender, RoutedEventArgs e)
+        private void ConfProbSE_LostFocus(object sender, RoutedEventArgs e)
         {
-            bool formatIsCorrect = double.TryParse(confProbEntering.Text, out p);
-            confProbEntering.Width = 100;
+            bool formatIsCorrect = double.TryParse(confProbEnteringSE.Text, out p);
+            confProbEnteringSE.Width = 100;
             if (!formatIsCorrect)
             {
-                confProbEntering.Width = 192;
-                confProbEntering.Text = "";
-                confProbEntering.PlaceholderText = "Incorrect format";
+                confProbEnteringSE.Width = 192;
+                confProbEnteringSE.Text = "";
+                confProbEnteringSE.PlaceholderText = "Incorrect format";
             }
 
             if (AllParamsEntered())
@@ -510,8 +555,8 @@ namespace ErrorsApp
             }
             if (e.Key == Windows.System.VirtualKey.Left)
             {
-                confProbEntering.AllowFocusOnInteraction = true;
-                confProbEntering.Focus(FocusState.Keyboard);
+                confProbEnteringSE.AllowFocusOnInteraction = true;
+                confProbEnteringSE.Focus(FocusState.Keyboard);
             }
         }
 
@@ -540,10 +585,10 @@ namespace ErrorsApp
                     NumOfValuesEntering_SummEr.AllowFocusOnInteraction = true;
                     NumOfValuesEntering_SummEr.Focus(FocusState.Keyboard);
                 }
-                else if (confProbEntering.Text == "")
+                else if (confProbEnteringSE.Text == "")
                 {
-                    confProbEntering.AllowFocusOnInteraction = true;
-                    confProbEntering.Focus(FocusState.Keyboard);
+                    confProbEnteringSE.AllowFocusOnInteraction = true;
+                    confProbEnteringSE.Focus(FocusState.Keyboard);
                 }
                 else if (marginErrorEntering.Text == "")
                 {
@@ -585,7 +630,7 @@ namespace ErrorsApp
 
         private bool AllParamsEntered()
         {
-            if(NumOfValuesEntering_SummEr.Text!="" && confProbEntering.Text!="" && marginErrorEntering.Text!="" && roundingIntEntering.Text != "")
+            if(NumOfValuesEntering_SummEr.Text!="" && confProbEnteringSE.Text!="" && marginErrorEntering.Text!="" && roundingIntEntering.Text != "")
             {
                 return true;
             }
