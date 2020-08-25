@@ -34,11 +34,13 @@
                 </MenuFlyout>
             </Button.Flyout>
         </Button>
-        <TextBox x:Name="NumOfValuesEntering" HorizontalAlignment="Left" Margin="10,115,0,0" Text="" TextWrapping="NoWrap" VerticalAlignment="Top" Height="50" Width="150" RequestedTheme="Default" FontSize="24" InputScope="Number" KeyUp="NumOfValEnt_KeyUp" KeyDown="NumOfValEnt_KeyDown" TextAlignment="Center"/>
+        <TextBox x:Name="NumOfValuesEntering" HorizontalAlignment="Left" Margin="60,115,0,0" Text="" TextWrapping="NoWrap" VerticalAlignment="Top" Height="50" Width="100" RequestedTheme="Default" FontSize="24" InputScope="Number" KeyUp="NumOfValEnt_KeyUp" KeyDown="NumOfValEnt_KeyDown" TextAlignment="Center"/>
         <TextBlock x:Name="EnterNumberBlock" HorizontalAlignment="Left" Margin="10,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="250" FocusVisualSecondaryBrush="#99FFFFFF" FocusVisualPrimaryBrush="White" SelectionHighlightColor="White" RequestedTheme="Light" Foreground="White" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" FontSize="24" Text="Enter number of values:&#xA;">
             <TextBlock.RenderTransform>
                 <CompositeTransform SkewY="0.232" TranslateY="0.584"/>
             </TextBlock.RenderTransform></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="300,50,0,0" Text="Confidence probability:" TextWrapping="Wrap" VerticalAlignment="Top" Height="68" RenderTransformOrigin="0.5,0.507" Width="120" FontSize="24" TextAlignment="Left"/>
+        <TextBox x:Name="ConfProbEntering" HorizontalAlignment="Left" Margin="300,115,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="100" FontSize="24" TextAlignment="Center" KeyUp="ConfProb_KeyUp" LostFocus="ConfProb_LostFocus"/>
         <TextBlock x:Name="ResultsOutput" HorizontalAlignment="Right" Margin="0,200,50,0" Text="" TextWrapping="Wrap" Width="400" Style="{StaticResource BodyTextBlockStyle}" Foreground="White" FocusVisualPrimaryBrush="Red" FocusVisualSecondaryBrush="#99FF0000" FontSize="24" Height="200" VerticalAlignment="Top" IsTextSelectionEnabled="True"/>
         <TextBlock x:Name="EnterValuesBlock" HorizontalAlignment="Left" Margin="10,165,0,0" Text="Enter your values:" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="200" FontSize="24" Visibility="Collapsed"/>
         <TextBox x:Name="maxRowsEntering" HorizontalAlignment="Left" Margin="540,50,0,0" Text="" TextWrapping="NoWrap" VerticalAlignment="Top" Header="Maximal number of rows in column" PlaceholderText="" FontSize="24" Width="200" Height="115" KeyUp="maxRowsEntering_KeyUp"/>
@@ -84,7 +86,5 @@
                 <TextBlock x:Name="summaryErrorOutput" HorizontalAlignment="Right" Margin="0,0,20,0" Text="" TextWrapping="Wrap" VerticalAlignment="Center" Width="250" Height="200" IsTextSelectionEnabled="True" FontSize="24"/>
             </Grid>
         </ScrollViewer>
-        <TextBlock HorizontalAlignment="Left" Margin="300,50,0,0" Text="Confidence probability" TextWrapping="Wrap" VerticalAlignment="Top" Height="68" RenderTransformOrigin="0.5,0.507" Width="120" FontSize="24" TextAlignment="Center"/>
-        <TextBox x:Name="ConfProbEntering" HorizontalAlignment="Left" Margin="300,115,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="100" FontSize="24" TextAlignment="Center" KeyUp="ConfProb_KeyUp" LostFocus="ConfProb_LostFocus"/>
     </Grid>
 </Page>
