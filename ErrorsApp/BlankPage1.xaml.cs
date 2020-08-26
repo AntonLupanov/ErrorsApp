@@ -104,9 +104,6 @@ namespace ErrorsApp
                 {                    
                     if (maxRowsEntering_SummEr == sender)
                     {
-                        Restart_SummEr();
-                        //MainPage.ErrorOfMeasurePage.maxRowsEntering.Text = "";
-                        //MainPage.ErrorOfMeasurePage.maxRowsEntering.PlaceholderText = $"currently it is {maxRows}";
                         TableCreating_SummEr();
                     }
                 }
