@@ -10,7 +10,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Default">
 
-    <Grid x:FieldModifier="public" x:Name="accidErrGrid" RequestedTheme="Dark" Background="Black" Margin="6,0,-6,0">
+    <Grid x:FieldModifier="public" x:Name="accidErrGrid" RequestedTheme="Default" Margin="6,0,-6,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="121*"/>
             <RowDefinition Height="239*"/>

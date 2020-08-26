@@ -34,8 +34,8 @@ namespace ErrorsApp
             English,
             Ukrainian
         }
-        public static byte language = (byte)LanguageEnum.English;
-        public static byte theme = (byte)ElementTheme.Dark;
+        public static byte language;
+        public static byte theme;
 
 
         public BlankPage1()

@@ -35,8 +35,8 @@ namespace ErrorsApp
         int currentValueNumber, previousValueNumber, NumOfVal;
         public static int maxRows = 5;
         bool[] formatOfValIsCorrect = new bool[0];
-        double medium, absoluteError, relativeError, sumMedium, sumAbsError, sumRelativeError;
-        double p, marginOfError, roundingInterval;
+        double medium, absoluteError, relativeError;
+        double p;
         enum LanguageEnum
         {
             English,
@@ -49,7 +49,7 @@ namespace ErrorsApp
         public MainPage()
         {
             this.InitializeComponent();
-            this.RequestedTheme = (ElementTheme)MainPage.theme;
+            this.RequestedTheme = (ElementTheme)BlankPage1.theme;
             language = BlankPage1.language;
             theme = BlankPage1.theme;
             ChangeLanguage((LanguageEnum)language);
