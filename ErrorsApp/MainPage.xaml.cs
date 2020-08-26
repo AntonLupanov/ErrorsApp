@@ -56,18 +56,11 @@ namespace ErrorsApp
             maxRows = BlankPage1.maxRows;
 
             maxRowsEntering.PlaceholderText = $"currently it is {maxRows}";
-            maxRowsEntering_SummEr.PlaceholderText = $"currently it is {maxRows}";
         }
 
         //Code for both error of measure and summary error pages
 
             //Code for menu except of restart
-
-        private void ErrorOfMeasureOpener_Click(object sender, RoutedEventArgs e)
-        {
-            //Restart_SummEr();
-            //summaryErrorScroll.Visibility = Visibility.Collapsed;
-        }
 
         private void SummaryErrorOpener_Click(object sender, RoutedEventArgs e)
         {
@@ -97,7 +90,6 @@ namespace ErrorsApp
             theme = (byte)ElementTheme.Dark;
             accidErrGrid.RequestedTheme = ElementTheme.Dark;
             accidErrGrid.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-            summaryErrorGrid.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
         }
 
         private void LightTheme_Click(object sender, RoutedEventArgs e)
@@ -105,7 +97,6 @@ namespace ErrorsApp
             theme = (byte)ElementTheme.Light;
             accidErrGrid.RequestedTheme = ElementTheme.Light;
             accidErrGrid.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-            summaryErrorGrid.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
         }
 
             //Entering maximal num of rows in column
@@ -123,17 +114,7 @@ namespace ErrorsApp
                 {
                     if (maxRowsEntering == sender)
                     {
-                        Restart();
-                        maxRowsEntering_SummEr.Text = "";
-                        maxRowsEntering_SummEr.PlaceholderText = $"currently it is {maxRows}";
                         TableCreating();
-                    }
-                    if (maxRowsEntering_SummEr == sender)
-                    {
-                        Restart_SummEr();
-                        maxRowsEntering.Text = "";
-                        maxRowsEntering.PlaceholderText = $"currently it is {maxRows}";
-                        TableCreating_SummEr();
                     }
                 }
             }
@@ -162,14 +143,7 @@ namespace ErrorsApp
                 }
                 else if (currentValueNumber == NumOfVal - 1 && formatOfValIsCorrect[currentValueNumber])
                 {
-                    if (summaryErrorScroll.Visibility == Visibility.Collapsed)
-                    {
-                        ResultsOutput.Focus(FocusState.Programmatic);
-                    }
-                    else
-                    {
-                        summaryErrorOutput.Focus(FocusState.Programmatic);
-                    }
+                    ResultsOutput.Focus(FocusState.Programmatic);                    
                 }
             }
         }
@@ -237,31 +211,15 @@ namespace ErrorsApp
         {
             if (language==(byte)LanguageEnum.English)
             {
-                if (summaryErrorScroll.Visibility == Visibility.Collapsed)
-                {
-                    absoluteError = ErrorOfMeasure(values);
-                    relativeError = absoluteError / medium * 100;
-                    ResultsOutput.Text = $"Medium value: {medium}\nAbsolute error: {Round(absoluteError, 4)}\nRelative error: {Round(relativeError, 2)}%";
-                }
-                else
-                {
-                    SummaryErrorCalculating(values);
-                    summaryErrorOutput.Text = $"Medium value: {sumMedium}\nAbsolute error: {Round(sumAbsError, 4)}\nRelative error: {Round(sumRelativeError, 2)}% ";
-                }
+                absoluteError = ErrorOfMeasure(values);
+                relativeError = absoluteError / medium * 100;
+                ResultsOutput.Text = $"Medium value: {medium}\nAbsolute error: {Round(absoluteError, 4)}\nRelative error: {Round(relativeError, 2)}%";
             }
             else if (language == (byte)LanguageEnum.Ukrainian)
             {
-                if (summaryErrorScroll.Visibility == Visibility.Collapsed)
-                {
-                    absoluteError = ErrorOfMeasure(values);
-                    relativeError = absoluteError / medium * 100;
-                    ResultsOutput.Text = $"Середнє значення: {medium}\nАбсолютна похибка: {Round(absoluteError, 4)}\nВідносна похибка: {Round(relativeError, 2)}%";
-                }
-                else
-                {
-                    SummaryErrorCalculating(values);
-                    summaryErrorOutput.Text = $"Середнє значення: {sumMedium}\nАбсолютна похибка: {Round(sumAbsError, 4)}\nВідносна похибка: {Round(sumRelativeError, 2)}% ";
-                }
+                absoluteError = ErrorOfMeasure(values);
+                relativeError = absoluteError / medium * 100;
+                ResultsOutput.Text = $"Середнє значення: {medium}\nАбсолютна похибка: {Round(absoluteError, 4)}\nВідносна похибка: {Round(relativeError, 2)}%";
             }
         }
 
@@ -465,249 +423,6 @@ namespace ErrorsApp
         }
 
 
-        //Code for summary error page
-
-        private void RestartSummEr_Click(object sender, RoutedEventArgs e)
-        {
-            Restart_SummEr();
-            NumOfValuesEntering_SummEr.Text = "";
-            confProbEnteringSE.Text = "";
-            marginErrorEntering.Text = "";
-            roundingIntEntering.Text = "";
-        }
-
-        private void Restart_SummEr()
-        {
-            EnterValuesBlock_SummEr.Visibility = Visibility.Collapsed;
-            for (int i = 0; i < textBoxesList.Count; i++)
-            {
-                summaryErrorGrid.Children.Remove(textBoxesList[i]);
-                formatOfValIsCorrect[i] = false;
-            }
-            textBoxesList.Clear();
-            summaryErrorOutput.Text = "";
-        }
-
-        private void TableCreating_SummEr()
-        {
-            Restart_SummEr();
-            EnterValuesBlock_SummEr.Visibility = Visibility.Visible;
-            for (int i = 0; i < NumOfVal; i++)
-            {
-                textBoxesList.Add(new TextBox
-                {
-                    Height = 50,
-                    Width = 100,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Visibility = Visibility.Visible,
-                    Margin = new Thickness
-                    {
-                        Left = NumOfValuesEntering_SummEr.Margin.Left + i / maxRows * 210,
-                        Top = EnterValuesBlock_SummEr.Margin.Top + EnterValuesBlock_SummEr.Height + i % maxRows * NumOfValuesEntering_SummEr.Height,
-                    },
-                    FontSize = NumOfValuesEntering_SummEr.FontSize,
-                    TextAlignment = NumOfValuesEntering_SummEr.TextAlignment,
-
-                });
-
-                textBoxesList[i].KeyUp += Value_KeyUp;
-                textBoxesList[i].KeyDown += Value_KeyDown;
-                textBoxesList[i].GotFocus += TextBox_GotFocus;
-                textBoxesList[i].LostFocus += TextBox_LostFocus;
-
-                summaryErrorGrid.Children.Add(textBoxesList[i]);
-            }
-            //textBoxesList[0].AllowFocusOnInteraction = true;
-            textBoxesList[0].Focus(FocusState.Keyboard);
-        }
-
-        private void NumOfValEntSummEr_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Right)
-            {
-                confProbEnteringSE.AllowFocusOnInteraction = true;
-                confProbEnteringSE.Focus(FocusState.Keyboard);
-            }
-        }
-
-        private void NumOfValEntSummEr_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-
-        }
-
-        private void NumOfValEntSummEr_LostFocus(object sender, RoutedEventArgs e)
-        {
-            bool formatIsCorrect = int.TryParse(NumOfValuesEntering_SummEr.Text, out NumOfVal);
-            NumOfValuesEntering_SummEr.Width = 100;
-            if (!formatIsCorrect)
-            {
-                IncorrectFormatOutput(NumOfValuesEntering_SummEr);
-            }
-            else
-            {
-                Array.Resize(ref values, NumOfVal);
-                Array.Resize(ref formatOfValIsCorrect, NumOfVal);
-            }
-            if (AllParamsEntered())
-            {
-                TableCreating_SummEr();
-            }
-        }
-
-        private void ConfProbSE_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Right)
-            {
-                marginErrorEntering.AllowFocusOnInteraction = true;
-                marginErrorEntering.Focus(FocusState.Keyboard);
-            }
-            if (e.Key == Windows.System.VirtualKey.Left)
-            {
-                NumOfValuesEntering_SummEr.AllowFocusOnInteraction = true;
-                NumOfValuesEntering_SummEr.Focus(FocusState.Keyboard);
-            }
-        }
-
-        private void ConfProbSE_LostFocus(object sender, RoutedEventArgs e)
-        {
-            bool formatIsCorrect = double.TryParse(confProbEnteringSE.Text, out p);
-            confProbEnteringSE.Width = 100;
-            if (!formatIsCorrect)
-            {
-                IncorrectFormatOutput(confProbEnteringSE);
-            }
-
-            if (AllParamsEntered())
-            {
-                TableCreating_SummEr();
-            }
-        }
-
-        private void marginError_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Right)
-            {
-                roundingIntEntering.AllowFocusOnInteraction = true;
-                roundingIntEntering.Focus(FocusState.Keyboard);
-            }
-            if (e.Key == Windows.System.VirtualKey.Left)
-            {
-                confProbEnteringSE.AllowFocusOnInteraction = true;
-                confProbEnteringSE.Focus(FocusState.Keyboard);
-            }
-        }
-
-        private void MarginError_LostFocus(object sender, RoutedEventArgs e)
-        {
-            bool formatIsCorrect = double.TryParse(marginErrorEntering.Text, out marginOfError);
-            marginErrorEntering.Width = 100;
-            if (!formatIsCorrect)
-            {
-                IncorrectFormatOutput(marginErrorEntering);
-            }
-            if (AllParamsEntered())
-            {
-                TableCreating_SummEr();
-            }
-        }
-
-        private void roundingInt_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == Windows.System.VirtualKey.Enter)
-            {
-                if (NumOfValuesEntering_SummEr.Text == "")
-                {
-                    NumOfValuesEntering_SummEr.AllowFocusOnInteraction = true;
-                    NumOfValuesEntering_SummEr.Focus(FocusState.Keyboard);
-                }
-                else if (confProbEnteringSE.Text == "")
-                {
-                    confProbEnteringSE.AllowFocusOnInteraction = true;
-                    confProbEnteringSE.Focus(FocusState.Keyboard);
-                }
-                else if (marginErrorEntering.Text == "")
-                {
-                    marginErrorEntering.AllowFocusOnInteraction = true;
-                    marginErrorEntering.Focus(FocusState.Keyboard);
-                }
-                else if (roundingIntEntering.Text == "")
-                {
-                    roundingIntEntering.AllowFocusOnInteraction = true;
-                    roundingIntEntering.Focus(FocusState.Keyboard);
-                }
-                else
-                {
-                    summaryErrorOutput.Focus(FocusState.Programmatic);
-                }
-            }
-            if (e.Key == Windows.System.VirtualKey.Left)
-            {
-                marginErrorEntering.AllowFocusOnInteraction = true;
-                marginErrorEntering.Focus(FocusState.Keyboard);
-            }
-        }
-
-        private void RoundingIntEnt_LostFocus(object sender, RoutedEventArgs e)
-        {
-            bool formatIsCorrect = double.TryParse(roundingIntEntering.Text, out roundingInterval);
-            roundingIntEntering.Width = 100;
-            if (!formatIsCorrect)
-            {
-                IncorrectFormatOutput(roundingIntEntering);
-            }
-            if (AllParamsEntered())
-            {
-                TableCreating_SummEr();
-            }
-        }
-
-        private bool AllParamsEntered()
-        {
-            if(NumOfValuesEntering_SummEr.Text!="" && confProbEnteringSE.Text!="" && marginErrorEntering.Text!="" && roundingIntEntering.Text != "")
-            {
-                return true;
-            }
-                return false;
-        }
-
-        private void SummaryErrorCalculating(double[] values)
-        {
-            sumMedium = 0;
-            for (int i = 0; i < NumOfVal; i++)
-            {
-                sumMedium += values[i];
-            }
-            sumMedium /= NumOfVal;
-
-            double errorOfInstrument = Tp(p) * marginOfError / 3;
-            double errorOfRounding = p * roundingInterval / 2;
-
-            sumAbsError = Sqrt(Pow(ErrorOfMeasure(values), 2) + Pow(errorOfInstrument, 2) + Pow(errorOfRounding, 2));
-
-            sumRelativeError = sumAbsError / sumMedium * 100;
-        }
-
-        private double Tp(double p)
-        {
-            if (p < 0.07966) { return 0.1; }
-            if (p < 0.38292) { return 0.5; }
-            if (p < 0.51607) { return 0.7; }
-            if (p < 0.68269) { return 1; }
-            if (p < 0.80640) { return 1.3; }
-
-            if (p < 0.89040) { return 1.6; }
-            if (p < 0.95450) { return 2.0; }
-            if (p < 0.97219) { return 2.2; }
-            if (p < 0.98360) { return 2.4; }
-            if (p < 0.99068) { return 2.6; }
-
-            if (p < 0.99489) { return 2.8; }
-            if (p < 0.99730) { return 3.0; }
-            if (p < 0.99953) { return 3.5; }
-            if (p < 0.99994) { return 4.0; }
-            if (p < 0.999994) { return 4.5; }
-            else { return 5; }
-        }
+        
     }
 }

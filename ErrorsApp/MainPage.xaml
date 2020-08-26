@@ -49,47 +49,5 @@
         <TextBlock x:Name="ResultsOutput" HorizontalAlignment="Right" Margin="0,200,50,0" Text="" TextWrapping="Wrap" Width="400" Style="{StaticResource BodyTextBlockStyle}" Foreground="White" FocusVisualPrimaryBrush="Red" FocusVisualSecondaryBrush="#99FF0000" FontSize="24" Height="200" VerticalAlignment="Top" IsTextSelectionEnabled="True" Grid.RowSpan="2"/>
         <TextBlock x:Name="EnterValuesBlock" HorizontalAlignment="Left" Margin="10,165,0,0" Text="Enter your values:" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="200" FontSize="24" Visibility="Collapsed"/>
         <TextBox x:Name="maxRowsEntering" HorizontalAlignment="Center" Margin="0,50,0,0" Text="" TextWrapping="NoWrap" VerticalAlignment="Top" Header="Maximal number of rows in column" PlaceholderText="" FontSize="24" Width="200" Height="115" KeyUp="maxRowsEntering_KeyUp"/>
-        <ScrollViewer x:Name="summaryErrorScroll" Background="Black" Visibility="Collapsed" RequestedTheme="Default" Grid.RowSpan="2" d:IsHidden="True">
-            <Grid x:Name="summaryErrorGrid" Height="718" Width="1279">
-                <Button x:Name="pageChanger_SummEr" Content="Page" Margin="10,5,0,0" VerticalAlignment="Top" Height="40" Width="100" FontSize="18">
-                    <Button.Flyout>
-                        <MenuFlyout x:Name="menuFlyout_SummEr" Placement="Bottom">
-                            <MenuFlyoutItem x:Name="ErrorOfMeasureOpener" Text="Accidental error of measure" Click="ErrorOfMeasureOpener_Click" FontSize="14"/>
-                        </MenuFlyout>
-                    </Button.Flyout>
-                </Button>
-                <Button x:Name="RestartButton_SummEr" Content="Restart" Margin="115,5,0,0" VerticalAlignment="Top" Height="40" Width="100" FontSize="18" Click="RestartSummEr_Click"/>
-                <Button x:Name="languageChanger_SummEr" Content="Language" VerticalAlignment="Top" Height="40" Width="100" FontSize="18" Margin="220,5,0,0">
-                    <Button.Flyout>
-                        <MenuFlyout>
-                            <MenuFlyoutItem x:Name="languageEng1" Text="English" Click="LanguageEnglish_Click"/>
-                            <MenuFlyoutItem x:Name="languageUkr1" Text="Українська" Click="LanguageUkr_Click"/>
-                        </MenuFlyout>
-                    </Button.Flyout>
-                </Button>
-                <Button x:Name="themeChanger_SummEr" Content="Theme" Margin="325,5,0,0" VerticalAlignment="Top" Height="40" Width="101" FontSize="18">
-                    <Button.Flyout>
-                        <MenuFlyout>
-                            <MenuFlyoutItem x:Name="themeDark1" Text="Dark" Click="DarkTheme_Click"/>
-                            <MenuFlyoutItem x:Name="themeLight1" Text="Light" Click="LightTheme_Click"/>
-                        </MenuFlyout>
-                    </Button.Flyout>
-                </Button>
-                <TextBlock x:Name="EnterNumberBlock_SummEr" HorizontalAlignment="Left" Margin="10,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="200" RequestedTheme="Default" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto" FontSize="24" Text="Number of values:&#xA;">
-                    <TextBlock.RenderTransform>
-                        <CompositeTransform SkewY="0.232" TranslateY="0.584"/>
-                    </TextBlock.RenderTransform></TextBlock>
-                <TextBox x:Name="NumOfValuesEntering_SummEr" HorizontalAlignment="Left" Margin="50,115,0,0" Text="" TextWrapping="NoWrap" VerticalAlignment="Top" Height="50" Width="100" RequestedTheme="Default" FontSize="24" InputScope="Number" KeyUp="NumOfValEntSummEr_KeyUp" KeyDown="NumOfValEntSummEr_KeyDown" TextAlignment="Center" LostFocus="NumOfValEntSummEr_LostFocus"/>
-                <TextBox x:Name="maxRowsEntering_SummEr" HorizontalAlignment="Right" Margin="0,45,91,0" Text="" TextWrapping="NoWrap" VerticalAlignment="Top" Header="Maximal number of rows in column" PlaceholderText="" FontSize="24" Width="250" Height="120" KeyUp="maxRowsEntering_KeyUp" TextAlignment="Center"/>
-                <TextBlock x:Name="EnterValuesBlock_SummEr" HorizontalAlignment="Left" Margin="10,165,0,0" Text="Enter your values:" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="200" FontSize="24" Visibility="Collapsed"/>
-                <TextBox x:Name="confProbEnteringSE" HorizontalAlignment="Left" Margin="250,115,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" Height="50" Header="" FontSize="24" TextAlignment="Center" KeyUp="ConfProbSE_KeyUp" LostFocus="ConfProbSE_LostFocus"/>
-                <TextBox x:Name="marginErrorEntering" HorizontalAlignment="Left" Margin="450,115,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" TextAlignment="Center" Header="" Height="50" Width="100" KeyUp="marginError_KeyUp" LostFocus="MarginError_LostFocus"/>
-                <TextBlock x:Name="marginErrorBlock" HorizontalAlignment="Left" Margin="420,45,0,0" Text="Margin of error:" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" Height="50" FontSize="24" TextAlignment="Center"/>
-                <TextBlock x:Name="confProbBlockSE" HorizontalAlignment="Left" Margin="240,45,0,0" Text="Confidence probability:" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="70" FontSize="24"/>
-                <TextBox x:Name="roundingIntEntering" HorizontalAlignment="Left" Margin="650,115,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" Height="50" FontSize="24" KeyUp="roundingInt_KeyUp" TextAlignment="Center" LostFocus="RoundingIntEnt_LostFocus"/>
-                <TextBlock x:Name="roundingIntBlock" HorizontalAlignment="Left" Margin="620,45,0,0" Text="Rounding interval:" TextWrapping="Wrap" VerticalAlignment="Top" Width="195" Height="50" FontSize="24" TextAlignment="Center"/>
-                <TextBlock x:Name="summaryErrorOutput" HorizontalAlignment="Right" Margin="0,0,20,0" Text="" TextWrapping="Wrap" VerticalAlignment="Center" Width="250" Height="200" IsTextSelectionEnabled="True" FontSize="24"/>
-            </Grid>
-        </ScrollViewer>
     </Grid>
 </Page>
