@@ -44,6 +44,7 @@ namespace ErrorsApp
         }
         static public byte language = (byte)LanguageEnum.English;
         static public byte theme = (byte)ElementTheme.Dark;
+        static bool firstlyOpened = true;
 
 
         public MainPage()
@@ -54,190 +55,25 @@ namespace ErrorsApp
             theme = BlankPage1.theme;
             ChangeLanguage((LanguageEnum)language);
             maxRows = BlankPage1.maxRows;
-
-            maxRowsEntering.PlaceholderText = $"currently it is {maxRows}";
+            if (firstlyOpened)
+            {
+                firstlyOpened = false;
+                GreetingsFlyout();
+            }
         }
 
-        //Code for both error of measure and summary error pages
+        private void GreetingsFlyout() 
+        {
+            
+        }
 
-            //Code for menu except of restart
+            //Code for menu
 
         private void SummaryErrorOpener_Click(object sender, RoutedEventArgs e)
         {
             Restart();
             this.Frame.Navigate(typeof(BlankPage1));
         }
-
-        private void LanguageEnglish_Click(object sender, RoutedEventArgs e)
-        {
-            language = (byte)LanguageEnum.English;
-            ChangeLanguage((LanguageEnum)language);
-        }
-
-        private void LanguageUkr_Click(object sender, RoutedEventArgs e)
-        {
-            language = (byte)LanguageEnum.Ukrainian;
-            ChangeLanguage((LanguageEnum)language);
-        }
-
-        private void ChangeLanguage(LanguageEnum language)
-        {
-
-        }
-
-        private void DarkTheme_Click(object sender, RoutedEventArgs e)
-        {
-            theme = (byte)ElementTheme.Dark;
-            accidErrGrid.RequestedTheme = ElementTheme.Dark;
-            accidErrGrid.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-        }
-
-        private void LightTheme_Click(object sender, RoutedEventArgs e)
-        {
-            theme = (byte)ElementTheme.Light;
-            accidErrGrid.RequestedTheme = ElementTheme.Light;
-            accidErrGrid.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-        }
-
-            //Entering maximal num of rows in column
-
-        private void maxRowsEntering_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == Windows.System.VirtualKey.Enter)
-            {
-                bool formatIsCorrect = int.TryParse(maxRowsEntering.Text, out maxRows);
-                if (!formatIsCorrect)
-                {
-                    maxRowsEntering.Text = "Incorrect format";
-                }
-                else
-                {
-                    if (maxRowsEntering == sender)
-                    {
-                        TableCreating();
-                    }
-                }
-            }
-        }
-
-            //Incorrect format output
-
-        private void IncorrectFormatOutput(TextBox sender)
-        {
-            sender.Width = language == (byte)LanguageEnum.Ukrainian ? 210 : 192;
-            sender.Text = "";
-            sender.PlaceholderText = language == (byte)LanguageEnum.Ukrainian ? "Невірний формат" :"Incorrect format";
-        }
-
-            //Entering values and outputing results
-
-        private void Value_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == Windows.System.VirtualKey.Enter)
-            {
-                formatOfValIsCorrect[currentValueNumber] = double.TryParse(textBoxesList[currentValueNumber].Text, out values[currentValueNumber]);
-                if (currentValueNumber < NumOfVal - 1 && formatOfValIsCorrect[currentValueNumber])
-                {
-                    textBoxesList[currentValueNumber + 1].AllowFocusOnInteraction = true;
-                    textBoxesList[currentValueNumber + 1].Focus(FocusState.Keyboard);
-                }
-                else if (currentValueNumber == NumOfVal - 1 && formatOfValIsCorrect[currentValueNumber])
-                {
-                    ResultsOutput.Focus(FocusState.Programmatic);                    
-                }
-            }
-        }
-
-        private void Value_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == Windows.System.VirtualKey.Up && currentValueNumber > 0)
-            {
-                textBoxesList[currentValueNumber - 1].AllowFocusOnInteraction = true;
-                textBoxesList[currentValueNumber - 1].Focus(FocusState.Keyboard);
-            }
-            if (e.Key == Windows.System.VirtualKey.Down && currentValueNumber < NumOfVal - 1)
-            {
-                textBoxesList[currentValueNumber + 1].AllowFocusOnInteraction = true;
-                textBoxesList[currentValueNumber + 1].Focus(FocusState.Keyboard);
-            }
-            if (e.Key == Windows.System.VirtualKey.Left && currentValueNumber / maxRows > 0)
-            {
-                textBoxesList[currentValueNumber - maxRows].AllowFocusOnInteraction = true;
-                textBoxesList[currentValueNumber - maxRows].Focus(FocusState.Keyboard);
-            }
-            if (e.Key == Windows.System.VirtualKey.Right && currentValueNumber < NumOfVal - maxRows)
-            {
-                textBoxesList[currentValueNumber + maxRows].AllowFocusOnInteraction = true;
-                textBoxesList[currentValueNumber + maxRows].Focus(FocusState.Keyboard);
-            }
-        }
-
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            for (int i = 0; i < NumOfVal; i++)
-            {
-                if (sender.Equals(textBoxesList[i]))
-                {
-                    currentValueNumber = i;
-                }
-            }
-        }
-
-        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            for (int i = 0; i < NumOfVal; i++)
-            {
-                if (sender.Equals(textBoxesList[i]))
-                {
-                    previousValueNumber = i;
-                }
-            }
-            
-            if (!formatOfValIsCorrect[previousValueNumber])
-            {
-                IncorrectFormatOutput(textBoxesList[previousValueNumber]);
-            }
-            else
-            {
-                textBoxesList[previousValueNumber].Width = 100;
-            }
-            if (AllNumsEnteredCheck())
-            {
-                Output();
-            }
-        }
-
-        private void Output()
-        {
-            if (language==(byte)LanguageEnum.English)
-            {
-                absoluteError = ErrorOfMeasure(values);
-                relativeError = absoluteError / medium * 100;
-                ResultsOutput.Text = $"Medium value: {medium}\nAbsolute error: {Round(absoluteError, 4)}\nRelative error: {Round(relativeError, 2)}%";
-            }
-            else if (language == (byte)LanguageEnum.Ukrainian)
-            {
-                absoluteError = ErrorOfMeasure(values);
-                relativeError = absoluteError / medium * 100;
-                ResultsOutput.Text = $"Середнє значення: {medium}\nАбсолютна похибка: {Round(absoluteError, 4)}\nВідносна похибка: {Round(relativeError, 2)}%";
-            }
-        }
-
-        private bool AllNumsEnteredCheck()
-        {
-            bool AllNumsEnteredCheck = true;
-            for (int i = 0; i < NumOfVal; i++)
-            {
-                if (!formatOfValIsCorrect[i])
-                {
-                    AllNumsEnteredCheck = false;
-                }
-            }
-            return AllNumsEnteredCheck;
-        }
-
-
-        //Code for accidental error of measure page
 
         private void Restart_Click(object sender, RoutedEventArgs e)
         {
@@ -261,6 +97,79 @@ namespace ErrorsApp
             NumOfValuesEntering.AllowFocusOnInteraction = true;
             NumOfValuesEntering.Focus(FocusState.Keyboard);
         }
+
+        private void LanguageEnglish_Click(object sender, RoutedEventArgs e)
+        {
+            language = (byte)LanguageEnum.English;
+            ChangeLanguage((LanguageEnum)language);
+        }
+
+        private void LanguageUkr_Click(object sender, RoutedEventArgs e)
+        {
+            language = (byte)LanguageEnum.Ukrainian;
+            ChangeLanguage((LanguageEnum)language);
+        }
+
+        private void ChangeLanguage(LanguageEnum language)
+        {
+            if (language == LanguageEnum.Ukrainian)
+            {
+                pageChanger.Content = "Сторінка";
+                SummaryErrorOpener.Text = "Сумарна похибка";
+                RestartButton.Content = "Заново";
+                languageChanger.Content = "Мова";
+                languageEng.Text = "Англійська";
+                languageUkr.Text = "Українська";
+                themeChanger.Content = "Тема";
+                themeDark.Text = "Темна";
+                themeLight.Text = "Світла";
+                EnterNumberBlock.Text = "Введіть кількість вимірювань:";
+                confProbBlock.Text = "Довірча ймовірність:";
+                maxRowsEntering.Header = "Максимальна кількість рядків в колонці";
+                maxRowsEntering.PlaceholderText = $"зараз це {maxRows}";
+                EnterValuesBlock.Text = "Введіть вимірювання";
+            }
+            if (language == LanguageEnum.English)
+            {
+                pageChanger.Content = "Page";
+                SummaryErrorOpener.Text = "Summary error";
+                RestartButton.Content = "Restart";
+                languageChanger.Content = "Language";
+                languageEng.Text = "English";
+                languageUkr.Text = "Ukrainian";
+                themeChanger.Content = "Theme";
+                themeDark.Text = "Dark";
+                themeLight.Text = "Light";
+                EnterNumberBlock.Text = "Enter number of values:";
+                confProbBlock.Text = "Confidence probability:";
+                maxRowsEntering.Header = "Maximal number of rows in column";
+                maxRowsEntering.PlaceholderText = $"currently it is {maxRows}";
+                EnterValuesBlock.Text = "Enter values:";
+            }
+        }
+
+        private void DarkTheme_Click(object sender, RoutedEventArgs e)
+        {
+            theme = (byte)ElementTheme.Dark;
+            ErrorOfMeasurePage.RequestedTheme = ElementTheme.Dark;
+        }
+
+        private void LightTheme_Click(object sender, RoutedEventArgs e)
+        {
+            theme = (byte)ElementTheme.Light;
+            ErrorOfMeasurePage.RequestedTheme = ElementTheme.Light;
+        }
+
+            //Incorrect format output
+
+        private void IncorrectFormatOutput(TextBox sender)
+        {
+            sender.Width = language == (byte)LanguageEnum.Ukrainian ? 210 : 192;
+            sender.Text = "";
+            sender.PlaceholderText = language == (byte)LanguageEnum.Ukrainian ? "Невірний формат" :"Incorrect format";
+        }
+
+            //Entering parameters
 
         private void TableCreating()
         {
@@ -353,6 +262,135 @@ namespace ErrorsApp
             }
         }
 
+        private void maxRowsEntering_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                ResultsOutput.AllowFocusOnInteraction = true;
+                ResultsOutput.Focus(FocusState.Programmatic);
+            }
+        }
+
+        private void MaxRowsEnt_LostFocus(object sender, RoutedEventArgs e)
+        {
+            bool formatIsCorrect = int.TryParse(maxRowsEntering.Text, out maxRows);
+            if (!formatIsCorrect)
+            {
+                maxRowsEntering.Text = "Incorrect format";
+            }
+            else
+            {
+                TableCreating();
+            }
+        }
+
+            //Entering values and outputing results
+
+        private void Value_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                formatOfValIsCorrect[currentValueNumber] = double.TryParse(textBoxesList[currentValueNumber].Text, out values[currentValueNumber]);
+                if (currentValueNumber < NumOfVal - 1 && formatOfValIsCorrect[currentValueNumber])
+                {
+                    textBoxesList[currentValueNumber + 1].AllowFocusOnInteraction = true;
+                    textBoxesList[currentValueNumber + 1].Focus(FocusState.Keyboard);
+                }
+                else if (currentValueNumber == NumOfVal - 1 && formatOfValIsCorrect[currentValueNumber])
+                {
+                    ResultsOutput.Focus(FocusState.Programmatic);
+                }
+            }
+        }
+
+        private void Value_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Up && currentValueNumber > 0)
+            {
+                textBoxesList[currentValueNumber - 1].AllowFocusOnInteraction = true;
+                textBoxesList[currentValueNumber - 1].Focus(FocusState.Keyboard);
+            }
+            if (e.Key == Windows.System.VirtualKey.Down && currentValueNumber < NumOfVal - 1)
+            {
+                textBoxesList[currentValueNumber + 1].AllowFocusOnInteraction = true;
+                textBoxesList[currentValueNumber + 1].Focus(FocusState.Keyboard);
+            }
+            if (e.Key == Windows.System.VirtualKey.Left && currentValueNumber / maxRows > 0)
+            {
+                textBoxesList[currentValueNumber - maxRows].AllowFocusOnInteraction = true;
+                textBoxesList[currentValueNumber - maxRows].Focus(FocusState.Keyboard);
+            }
+            if (e.Key == Windows.System.VirtualKey.Right && currentValueNumber < NumOfVal - maxRows)
+            {
+                textBoxesList[currentValueNumber + maxRows].AllowFocusOnInteraction = true;
+                textBoxesList[currentValueNumber + maxRows].Focus(FocusState.Keyboard);
+            }
+        }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < NumOfVal; i++)
+            {
+                if (sender.Equals(textBoxesList[i]))
+                {
+                    currentValueNumber = i;
+                }
+            }
+        }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < NumOfVal; i++)
+            {
+                if (sender.Equals(textBoxesList[i]))
+                {
+                    previousValueNumber = i;
+                }
+            }
+
+            if (!formatOfValIsCorrect[previousValueNumber])
+            {
+                IncorrectFormatOutput(textBoxesList[previousValueNumber]);
+            }
+            else
+            {
+                textBoxesList[previousValueNumber].Width = 100;
+            }
+            if (AllValsEnteredCheck())
+            {
+                Output();
+            }
+        }
+
+        private bool AllValsEnteredCheck()
+        {
+            bool AllValsEnteredCheck = true;
+            for (int i = 0; i < NumOfVal; i++)
+            {
+                if (!formatOfValIsCorrect[i])
+                {
+                    AllValsEnteredCheck = false;
+                }
+            }
+            return AllValsEnteredCheck;
+        }
+
+        private void Output()
+        {
+            if (language == (byte)LanguageEnum.English)
+            {
+                absoluteError = ErrorOfMeasure(values);
+                relativeError = absoluteError / medium * 100;
+                ResultsOutput.Text = $"Medium value: {medium}\nAbsolute error: {Round(absoluteError, 4)}\nRelative error: {Round(relativeError, 2)}%";
+            }
+            else if (language == (byte)LanguageEnum.Ukrainian)
+            {
+                absoluteError = ErrorOfMeasure(values);
+                relativeError = absoluteError / medium * 100;
+                ResultsOutput.Text = $"Середнє значення: {medium}\nАбсолютна похибка: {Round(absoluteError, 4)}\nВідносна похибка: {Round(relativeError, 2)}%";
+            }
+        }
+
         private double ErrorOfMeasure(double[] values)
         {
             medium = 0;
@@ -373,7 +411,7 @@ namespace ErrorsApp
                 ErrorOfMeasure += (values[i] - medium) * (values[i] - medium);
             }
             ErrorOfMeasure = Tpn(p, NumOfVal) * Sqrt(ErrorOfMeasure / (NumOfVal * NumOfVal - NumOfVal));
-                        
+
             return ErrorOfMeasure;
         }
 
@@ -413,7 +451,7 @@ namespace ErrorsApp
             {
                 for (int j = 0; j < tableOfTpn.GetLength(1); j++)
                 {
-                    if (p <= tableOfTpn[0,j] && n <= tableOfTpn[i,0])
+                    if (p <= tableOfTpn[0, j] && n <= tableOfTpn[i, 0])
                     {
                         return tableOfTpn[i, j];
                     }
@@ -421,8 +459,5 @@ namespace ErrorsApp
             }
             return 0;
         }
-
-
-        
     }
 }

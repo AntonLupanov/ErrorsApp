@@ -50,183 +50,13 @@ namespace ErrorsApp
             maxRowsEntering_SummEr.PlaceholderText = $"currently it is {maxRows}";
         }
                 
-        //Code for menu except of restart
+        //Code for menu
 
         private void ErrorOfMeasureOpener_Click(object sender, RoutedEventArgs e)
         {
             Restart_SummEr();
             this.Frame.Navigate(typeof(MainPage));
         }
-
-        private void LanguageEnglish_Click(object sender, RoutedEventArgs e)
-        {
-            language = (byte)LanguageEnum.English;
-            ChangeLanguage(LanguageEnum.English);
-        }
-
-        private void LanguageUkr_Click(object sender, RoutedEventArgs e)
-        {
-            language = (byte)LanguageEnum.Ukrainian;
-            ChangeLanguage(LanguageEnum.Ukrainian);
-        }
-
-        private void ChangeLanguage(LanguageEnum language)
-        {
-
-        }
-
-        private void DarkTheme_Click(object sender, RoutedEventArgs e)
-        {
-            theme = (byte)ElementTheme.Dark;
-            SummaryErrorPage.RequestedTheme = ElementTheme.Dark;
-            summaryErrorGrid.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-        }
-
-        private void LightTheme_Click(object sender, RoutedEventArgs e)
-        {
-            theme = (byte)ElementTheme.Light;
-            SummaryErrorPage.RequestedTheme = ElementTheme.Light;
-            summaryErrorGrid.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-        }
-
-        //Entering maximal num of rows in column
-
-        private void maxRowsEntering_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == Windows.System.VirtualKey.Enter)
-            {
-                bool formatIsCorrect = int.TryParse(maxRowsEntering_SummEr.Text, out maxRows);
-                if (!formatIsCorrect)
-                {
-                    maxRowsEntering_SummEr.Text = "Incorrect format";
-                }
-                else
-                {                    
-                    if (maxRowsEntering_SummEr == sender)
-                    {
-                        Restart_SummEr();
-                        //MainPage.ErrorOfMeasurePage.maxRowsEntering.Text = "";
-                        //MainPage.ErrorOfMeasurePage.maxRowsEntering.PlaceholderText = $"currently it is {maxRows}";
-                        TableCreating_SummEr();
-                    }
-                }
-            }
-        }
-
-        //Incorrect format output
-
-        private void IncorrectFormatOutput(TextBox sender)
-        {
-            sender.Width = language == (byte)LanguageEnum.Ukrainian ? 210 : 192;
-            sender.Text = "";
-            sender.PlaceholderText = language == (byte)LanguageEnum.Ukrainian ? "Невірний формат" : "Incorrect format";
-        }
-
-        //Entering values and outputing results
-
-        private void Value_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == Windows.System.VirtualKey.Enter)
-            {
-                formatOfValIsCorrect[currentValueNumber] = double.TryParse(textBoxesList[currentValueNumber].Text, out values[currentValueNumber]);
-                if (currentValueNumber < NumOfVal - 1 && formatOfValIsCorrect[currentValueNumber])
-                {
-                    textBoxesList[currentValueNumber + 1].AllowFocusOnInteraction = true;
-                    textBoxesList[currentValueNumber + 1].Focus(FocusState.Keyboard);
-                }
-                else if (currentValueNumber == NumOfVal - 1 && formatOfValIsCorrect[currentValueNumber])
-                {                    
-                    summaryErrorOutput.Focus(FocusState.Programmatic);
-                }
-            }
-        }
-
-        private void Value_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == Windows.System.VirtualKey.Up && currentValueNumber > 0)
-            {
-                textBoxesList[currentValueNumber - 1].AllowFocusOnInteraction = true;
-                textBoxesList[currentValueNumber - 1].Focus(FocusState.Keyboard);
-            }
-            if (e.Key == Windows.System.VirtualKey.Down && currentValueNumber < NumOfVal - 1)
-            {
-                textBoxesList[currentValueNumber + 1].AllowFocusOnInteraction = true;
-                textBoxesList[currentValueNumber + 1].Focus(FocusState.Keyboard);
-            }
-            if (e.Key == Windows.System.VirtualKey.Left && currentValueNumber / maxRows > 0)
-            {
-                textBoxesList[currentValueNumber - maxRows].AllowFocusOnInteraction = true;
-                textBoxesList[currentValueNumber - maxRows].Focus(FocusState.Keyboard);
-            }
-            if (e.Key == Windows.System.VirtualKey.Right && currentValueNumber < NumOfVal - maxRows)
-            {
-                textBoxesList[currentValueNumber + maxRows].AllowFocusOnInteraction = true;
-                textBoxesList[currentValueNumber + maxRows].Focus(FocusState.Keyboard);
-            }
-        }
-
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            for (int i = 0; i < NumOfVal; i++)
-            {
-                if (sender.Equals(textBoxesList[i]))
-                {
-                    currentValueNumber = i;
-                }
-            }
-        }
-
-        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            for (int i = 0; i < NumOfVal; i++)
-            {
-                if (sender.Equals(textBoxesList[i]))
-                {
-                    previousValueNumber = i;
-                }
-            }
-
-            if (!formatOfValIsCorrect[previousValueNumber])
-            {
-                IncorrectFormatOutput(textBoxesList[previousValueNumber]);
-            }
-            else
-            {
-                textBoxesList[previousValueNumber].Width = 100;
-            }
-            if (AllNumsEnteredCheck())
-            {
-                Output();
-            }
-        }
-
-        private void Output()
-        {
-            if (language == (byte)LanguageEnum.English)
-            {                
-                    SummaryErrorCalculating(values);
-                    summaryErrorOutput.Text = $"Medium value: {sumMedium}\nAbsolute error: {Round(sumAbsError, 4)}\nRelative error: {Round(sumRelativeError, 2)}% ";
-            }
-            else if (language == (byte)LanguageEnum.Ukrainian)
-            {                
-                    SummaryErrorCalculating(values);
-                    summaryErrorOutput.Text = $"Середнє значення: {sumMedium}\nАбсолютна похибка: {Round(sumAbsError, 4)}\nВідносна похибка: {Round(sumRelativeError, 2)}% ";
-            }
-        }
-
-        private bool AllNumsEnteredCheck()
-        {
-            bool AllNumsEnteredCheck = true;
-            for (int i = 0; i < NumOfVal; i++)
-            {
-                if (!formatOfValIsCorrect[i])
-                {
-                    AllNumsEnteredCheck = false;
-                }
-            }
-            return AllNumsEnteredCheck;
-        }
-
 
         private void RestartSummEr_Click(object sender, RoutedEventArgs e)
         {
@@ -249,39 +79,82 @@ namespace ErrorsApp
             summaryErrorOutput.Text = "";
         }
 
-        private void TableCreating_SummEr()
+        private void LanguageEnglish_Click(object sender, RoutedEventArgs e)
         {
-            Restart_SummEr();
-            EnterValuesBlock_SummEr.Visibility = Visibility.Visible;
-            for (int i = 0; i < NumOfVal; i++)
-            {
-                textBoxesList.Add(new TextBox
-                {
-                    Height = 50,
-                    Width = 100,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Visibility = Visibility.Visible,
-                    Margin = new Thickness
-                    {
-                        Left = NumOfValuesEntering_SummEr.Margin.Left + i / maxRows * 210,
-                        Top = EnterValuesBlock_SummEr.Margin.Top + EnterValuesBlock_SummEr.Height + i % maxRows * NumOfValuesEntering_SummEr.Height,
-                    },
-                    FontSize = NumOfValuesEntering_SummEr.FontSize,
-                    TextAlignment = NumOfValuesEntering_SummEr.TextAlignment,
-
-                });
-
-                textBoxesList[i].KeyUp += Value_KeyUp;
-                textBoxesList[i].KeyDown += Value_KeyDown;
-                textBoxesList[i].GotFocus += TextBox_GotFocus;
-                textBoxesList[i].LostFocus += TextBox_LostFocus;
-
-                summaryErrorGrid.Children.Add(textBoxesList[i]);
-            }
-            //textBoxesList[0].AllowFocusOnInteraction = true;
-            textBoxesList[0].Focus(FocusState.Keyboard);
+            language = (byte)LanguageEnum.English;
+            ChangeLanguage(LanguageEnum.English);
         }
+
+        private void LanguageUkr_Click(object sender, RoutedEventArgs e)
+        {
+            language = (byte)LanguageEnum.Ukrainian;
+            ChangeLanguage(LanguageEnum.Ukrainian);
+        }
+
+        private void ChangeLanguage(LanguageEnum language)
+        {
+            if (language == LanguageEnum.Ukrainian)
+            {
+                pageChanger_SummEr.Content = "Сторінка";
+                ErrorOfMeasureOpener.Text = "Похибка вимірювання";
+                RestartButton_SummEr.Content = "Заново";
+                languageChanger_SummEr.Content = "Мова";
+                languageEng1.Text = "Англійська";
+                languageUkr1.Text = "Українська";
+                themeChanger_SummEr.Content = "Тема";
+                themeDark1.Text = "Темна";
+                themeLight1.Text = "Світла";
+                EnterNumberBlock_SummEr.Text = "Введіть кількість вимірювань:";
+                confProbBlockSE.Text = "Довірча ймовірність:";
+                marginErrorBlock.Text = "Гранична похибка:";
+                roundingIntBlock.Text = "Інтервал заокруглення:";
+                maxRowsEntering_SummEr.Header = "Максимальна кількість рядків в колонці";
+                maxRowsEntering_SummEr.PlaceholderText = $"зараз це {maxRows}";
+                EnterValuesBlock_SummEr.Text = "Введіть вимірювання";
+            }
+            if (language == LanguageEnum.English)
+            {
+                pageChanger_SummEr.Content = "Page";
+                ErrorOfMeasureOpener.Text = "Error of measure";
+                RestartButton_SummEr.Content = "Restart";
+                languageChanger_SummEr.Content = "Language";
+                languageEng1.Text = "English";
+                languageUkr1.Text = "Ukrainian";
+                themeChanger_SummEr.Content = "Theme";
+                themeDark1.Text = "Dark";
+                themeLight1.Text = "Light";
+                EnterNumberBlock_SummEr.Text = "Enter number of values:";
+                confProbBlockSE.Text = "Confidence probability:";
+                marginErrorBlock.Text = "Margin error:";
+                roundingIntBlock.Text = "Rounding interval:";
+                maxRowsEntering_SummEr.Header = "Maximal number of rows in column";
+                maxRowsEntering_SummEr.PlaceholderText = $"currently it is {maxRows}";
+                EnterValuesBlock_SummEr.Text = "Enter values";
+            }
+        }
+
+        private void DarkTheme_Click(object sender, RoutedEventArgs e)
+        {
+            theme = (byte)ElementTheme.Dark;
+            SummaryErrorPage.RequestedTheme = ElementTheme.Dark;
+        }
+
+        private void LightTheme_Click(object sender, RoutedEventArgs e)
+        {
+            theme = (byte)ElementTheme.Light;
+            SummaryErrorPage.RequestedTheme = ElementTheme.Light;
+        }
+
+        //Incorrect format output
+
+        private void IncorrectFormatOutput(TextBox sender)
+        {
+            sender.Width = language == (byte)LanguageEnum.Ukrainian ? 210 : 192;
+            sender.Text = "";
+            sender.PlaceholderText = language == (byte)LanguageEnum.Ukrainian ? "Невірний формат" : "Incorrect format";
+        }
+
+        //Entering parameters
 
         private void NumOfValEntSummEr_KeyUp(object sender, KeyRoutedEventArgs e)
         {
@@ -423,6 +296,31 @@ namespace ErrorsApp
             }
         }
 
+        private void maxRowsEntering_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                roundingIntEntering.AllowFocusOnInteraction = true;
+                roundingIntEntering.Focus(FocusState.Keyboard);
+            }
+        }
+
+        private void MaxRowsEnt_LostFocus(object sender, RoutedEventArgs e)
+        {
+            bool formatIsCorrect = int.TryParse(maxRowsEntering_SummEr.Text, out maxRows);
+            if (!formatIsCorrect)
+            {
+                maxRowsEntering_SummEr.Text = "Incorrect format";
+            }
+            else
+            {
+                if (maxRowsEntering_SummEr == sender)
+                {
+                    TableCreating_SummEr();
+                }
+            }
+        }
+
         private bool AllParamsEntered()
         {
             if (NumOfValuesEntering_SummEr.Text != "" && confProbEnteringSE.Text != "" && marginErrorEntering.Text != "" && roundingIntEntering.Text != "")
@@ -430,6 +328,131 @@ namespace ErrorsApp
                 return true;
             }
             return false;
+        }
+
+        private void TableCreating_SummEr()
+        {
+            Restart_SummEr();
+            EnterValuesBlock_SummEr.Visibility = Visibility.Visible;
+            for (int i = 0; i < NumOfVal; i++)
+            {
+                textBoxesList.Add(new TextBox
+                {
+                    Height = 50,
+                    Width = 100,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Visibility = Visibility.Visible,
+                    Margin = new Thickness
+                    {
+                        Left = NumOfValuesEntering_SummEr.Margin.Left + i / maxRows * 210,
+                        Top = EnterValuesBlock_SummEr.Margin.Top + EnterValuesBlock_SummEr.Height + i % maxRows * NumOfValuesEntering_SummEr.Height,
+                    },
+                    FontSize = NumOfValuesEntering_SummEr.FontSize,
+                    TextAlignment = NumOfValuesEntering_SummEr.TextAlignment,
+
+                });
+
+                textBoxesList[i].KeyUp += Value_KeyUp;
+                textBoxesList[i].KeyDown += Value_KeyDown;
+                textBoxesList[i].GotFocus += TextBox_GotFocus;
+                textBoxesList[i].LostFocus += TextBox_LostFocus;
+
+                summaryErrorGrid.Children.Add(textBoxesList[i]);
+            }
+            //textBoxesList[0].AllowFocusOnInteraction = true;
+            textBoxesList[0].Focus(FocusState.Keyboard);
+        }
+
+        //Entering values and outputing results
+
+        private void Value_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                formatOfValIsCorrect[currentValueNumber] = double.TryParse(textBoxesList[currentValueNumber].Text, out values[currentValueNumber]);
+                if (currentValueNumber < NumOfVal - 1 && formatOfValIsCorrect[currentValueNumber])
+                {
+                    textBoxesList[currentValueNumber + 1].AllowFocusOnInteraction = true;
+                    textBoxesList[currentValueNumber + 1].Focus(FocusState.Keyboard);
+                }
+                else if (currentValueNumber == NumOfVal - 1 && formatOfValIsCorrect[currentValueNumber])
+                {
+                    summaryErrorOutput.Focus(FocusState.Programmatic);
+                }
+            }
+        }
+
+        private void Value_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Up && currentValueNumber > 0)
+            {
+                textBoxesList[currentValueNumber - 1].AllowFocusOnInteraction = true;
+                textBoxesList[currentValueNumber - 1].Focus(FocusState.Keyboard);
+            }
+            if (e.Key == Windows.System.VirtualKey.Down && currentValueNumber < NumOfVal - 1)
+            {
+                textBoxesList[currentValueNumber + 1].AllowFocusOnInteraction = true;
+                textBoxesList[currentValueNumber + 1].Focus(FocusState.Keyboard);
+            }
+            if (e.Key == Windows.System.VirtualKey.Left && currentValueNumber / maxRows > 0)
+            {
+                textBoxesList[currentValueNumber - maxRows].AllowFocusOnInteraction = true;
+                textBoxesList[currentValueNumber - maxRows].Focus(FocusState.Keyboard);
+            }
+            if (e.Key == Windows.System.VirtualKey.Right && currentValueNumber < NumOfVal - maxRows)
+            {
+                textBoxesList[currentValueNumber + maxRows].AllowFocusOnInteraction = true;
+                textBoxesList[currentValueNumber + maxRows].Focus(FocusState.Keyboard);
+            }
+        }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < NumOfVal; i++)
+            {
+                if (sender.Equals(textBoxesList[i]))
+                {
+                    currentValueNumber = i;
+                }
+            }
+        }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < NumOfVal; i++)
+            {
+                if (sender.Equals(textBoxesList[i]))
+                {
+                    previousValueNumber = i;
+                }
+            }
+
+            if (!formatOfValIsCorrect[previousValueNumber])
+            {
+                IncorrectFormatOutput(textBoxesList[previousValueNumber]);
+            }
+            else
+            {
+                textBoxesList[previousValueNumber].Width = 100;
+            }
+            if (AllValsEnteredCheck())
+            {
+                Output();
+            }
+        }
+
+        private bool AllValsEnteredCheck()
+        {
+            bool AllValsEnteredCheck = true;
+            for (int i = 0; i < NumOfVal; i++)
+            {
+                if (!formatOfValIsCorrect[i])
+                {
+                    AllValsEnteredCheck = false;
+                }
+            }
+            return AllValsEnteredCheck;
         }
 
         private double ErrorOfMeasure(double[] values)
@@ -538,6 +561,20 @@ namespace ErrorsApp
                 }
             }
             return 0;
+        }
+
+        private void Output()
+        {
+            if (language == (byte)LanguageEnum.English)
+            {
+                SummaryErrorCalculating(values);
+                summaryErrorOutput.Text = $"Medium value: {sumMedium}\nAbsolute error: {Round(sumAbsError, 4)}\nRelative error: {Round(sumRelativeError, 2)}% ";
+            }
+            else if (language == (byte)LanguageEnum.Ukrainian)
+            {
+                SummaryErrorCalculating(values);
+                summaryErrorOutput.Text = $"Середнє значення: {sumMedium}\nАбсолютна похибка: {Round(sumAbsError, 4)}\nВідносна похибка: {Round(sumRelativeError, 2)}% ";
+            }
         }
     }
 }
