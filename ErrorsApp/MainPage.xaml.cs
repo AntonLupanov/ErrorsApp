@@ -58,16 +58,22 @@ namespace ErrorsApp
             if (firstlyOpened)
             {
                 firstlyOpened = false;
-                GreetingsFlyout();
             }
+            else GreetingsFlyoutClose();
         }
 
-        private void GreetingsFlyout() 
+        private void GreetingsFlyoutClose() 
         {
-            
+            accidErrGridCover.Visibility = Visibility.Collapsed;
+            GreetingsFlyout.Visibility = Visibility.Collapsed;
         }
 
-            //Code for menu
+        private void ErrorOfMeasure_Click(object sender, RoutedEventArgs e)
+        {
+            GreetingsFlyoutClose();
+        }
+
+        //Code for menu
 
         private void SummaryErrorOpener_Click(object sender, RoutedEventArgs e)
         {
