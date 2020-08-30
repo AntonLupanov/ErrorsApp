@@ -111,6 +111,33 @@ namespace ErrorsApp
                 maxRowsEntering_SummEr.Header = "Максимальна кількість рядків в колонці";
                 maxRowsEntering_SummEr.PlaceholderText = $"зараз це {maxRows}";
                 EnterValuesBlock_SummEr.Text = "Введіть вимірювання";
+                if (summaryErrorOutput.Text != "")
+                {
+                    Output();
+                }
+                for (int i = 0; i < textBoxesList.Count; i++)
+                {
+                    if (textBoxesList[i].PlaceholderText == "Incorrect format")
+                    {
+                        textBoxesList[i].PlaceholderText = "Невірний формат";
+                    }
+                }
+                if (NumOfValuesEntering_SummEr.PlaceholderText == "Incorrect format")
+                {
+                    NumOfValuesEntering_SummEr.PlaceholderText = "Невірний формат";
+                }
+                if (confProbEnteringSE.PlaceholderText == "Incorrect format")
+                {
+                    confProbEnteringSE.PlaceholderText = "Невірний формат";
+                }
+                if (marginErrorEntering.PlaceholderText == "Incorrect format")
+                {
+                    marginErrorEntering.PlaceholderText = "Невірний формат";
+                }
+                if (roundingIntEntering.PlaceholderText == "Incorrect format")
+                {
+                    roundingIntEntering.PlaceholderText = "Невірний формат";
+                }
             }
             if (language == LanguageEnum.English)
             {
@@ -130,6 +157,33 @@ namespace ErrorsApp
                 maxRowsEntering_SummEr.Header = "Maximal number of rows in column";
                 maxRowsEntering_SummEr.PlaceholderText = $"currently it is {maxRows}";
                 EnterValuesBlock_SummEr.Text = "Enter values";
+                if (summaryErrorOutput.Text != "")
+                {
+                    Output();
+                }
+                for (int i = 0; i < textBoxesList.Count; i++)
+                {
+                    if (textBoxesList[i].PlaceholderText == "Невірний формат")
+                    {
+                        textBoxesList[i].PlaceholderText = "Incorrect format";
+                    }
+                }
+                if (NumOfValuesEntering_SummEr.PlaceholderText == "Невірний формат")
+                {
+                    NumOfValuesEntering_SummEr.PlaceholderText = "Incorrect format";
+                }
+                if (confProbEnteringSE.PlaceholderText == "Невірний формат")
+                {
+                    confProbEnteringSE.PlaceholderText = "Incorrect format";
+                }
+                if (marginErrorEntering.PlaceholderText == "Невірний формат")
+                {
+                    marginErrorEntering.PlaceholderText = "Incorrect format";
+                }
+                if (roundingIntEntering.PlaceholderText == "Невірний формат")
+                {
+                    roundingIntEntering.PlaceholderText = "Incorrect format";
+                }
             }
         }
 
@@ -148,7 +202,7 @@ namespace ErrorsApp
         //Incorrect format output
 
         private void IncorrectFormatOutput(TextBox sender)
-        {
+        {            
             sender.Width = language == (byte)LanguageEnum.Ukrainian ? 210 : 192;
             sender.Text = "";
             sender.PlaceholderText = language == (byte)LanguageEnum.Ukrainian ? "Невірний формат" : "Incorrect format";
@@ -158,23 +212,22 @@ namespace ErrorsApp
 
         private void NumOfValEntSummEr_KeyUp(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Right)
+            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Right && !AllParamsEntered())
             {
                 confProbEnteringSE.AllowFocusOnInteraction = true;
                 confProbEnteringSE.Focus(FocusState.Keyboard);
             }
-        }
-
-        private void NumOfValEntSummEr_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-
+            if (AllParamsEntered())
+            {
+                TableCreating_SummEr();
+            }
         }
 
         private void NumOfValEntSummEr_LostFocus(object sender, RoutedEventArgs e)
         {
             bool formatIsCorrect = int.TryParse(NumOfValuesEntering_SummEr.Text, out NumOfVal);
             NumOfValuesEntering_SummEr.Width = 100;
-            if (!formatIsCorrect)
+            if (!formatIsCorrect || NumOfVal < 1)
             {
                 IncorrectFormatOutput(NumOfValuesEntering_SummEr);
             }

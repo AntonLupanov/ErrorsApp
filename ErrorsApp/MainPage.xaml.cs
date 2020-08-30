@@ -134,6 +134,25 @@ namespace ErrorsApp
                 maxRowsEntering.Header = "Максимальна кількість рядків в колонці";
                 maxRowsEntering.PlaceholderText = $"зараз це {maxRows}";
                 EnterValuesBlock.Text = "Введіть вимірювання";
+                if (ResultsOutput.Text != "")
+                {
+                    Output();
+                }
+                for (int i = 0; i < textBoxesList.Count; i++)
+                {
+                    if (textBoxesList[i].PlaceholderText == "Incorrect format")
+                    {
+                        textBoxesList[i].PlaceholderText = "Невірний формат";
+                    }
+                }
+                if (NumOfValuesEntering.PlaceholderText == "Incorrect format")
+                {
+                    NumOfValuesEntering.PlaceholderText = "Невірний формат";
+                }
+                if (ConfProbEntering.PlaceholderText == "Incorrect format")
+                {
+                    ConfProbEntering.PlaceholderText = "Невірний формат";
+                }
             }
             if (language == LanguageEnum.English)
             {
@@ -151,6 +170,25 @@ namespace ErrorsApp
                 maxRowsEntering.Header = "Maximal number of rows in column";
                 maxRowsEntering.PlaceholderText = $"currently it is {maxRows}";
                 EnterValuesBlock.Text = "Enter values:";
+                if (ResultsOutput.Text != "")
+                {
+                    Output();
+                }
+                for (int i = 0; i < textBoxesList.Count; i++)
+                {
+                    if (textBoxesList[i].PlaceholderText == "Невірний формат")
+                    {
+                        textBoxesList[i].PlaceholderText = "Incorrect format";
+                    }
+                }
+                if (NumOfValuesEntering.PlaceholderText == "Невірний формат")
+                {
+                    NumOfValuesEntering.PlaceholderText = "Incorrect format";
+                }
+                if (ConfProbEntering.PlaceholderText == "Невірний формат")
+                {
+                    ConfProbEntering.PlaceholderText = "Incorrect format";
+                }
             }
         }
 
@@ -215,18 +253,7 @@ namespace ErrorsApp
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
-                bool formatIsCorrect = int.TryParse(NumOfValuesEntering.Text, out NumOfVal);
-                if (!formatIsCorrect)
-                {
-                    IncorrectFormatOutput(NumOfValuesEntering);
-                }
-                else
-                {
-                    Array.Resize(ref values, NumOfVal);
-                    Array.Resize(ref formatOfValIsCorrect, NumOfVal);
-                    ConfProbEntering.AllowFocusOnInteraction = true;
-                    ConfProbEntering.Focus(FocusState.Keyboard);
-                }
+                NumOfValEnt_ToLoseFocus();
             }
         }
 
@@ -234,6 +261,23 @@ namespace ErrorsApp
         {
             if (e.Key == Windows.System.VirtualKey.Right)
             {
+                NumOfValEnt_ToLoseFocus();
+            }
+        }
+
+        private void NumOfValEnt_ToLoseFocus()
+        {
+            bool formatIsCorrect = int.TryParse(NumOfValuesEntering.Text, out NumOfVal);
+            if (!formatIsCorrect || NumOfVal < 1)
+            {
+                IncorrectFormatOutput(NumOfValuesEntering);
+                ConfProbEntering.AllowFocusOnInteraction = true;
+                ConfProbEntering.Focus(FocusState.Keyboard);
+            }
+            else
+            {
+                Array.Resize(ref values, NumOfVal);
+                Array.Resize(ref formatOfValIsCorrect, NumOfVal);
                 ConfProbEntering.AllowFocusOnInteraction = true;
                 ConfProbEntering.Focus(FocusState.Keyboard);
             }
